@@ -29,6 +29,7 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
@@ -62,18 +63,28 @@
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Style="{StaticResource labelStyle}" Content="Interval number in data:    " />
+                    <Label Style="{StaticResource labelStyle}" Content="Interval number in data:    "  Width="160"/>
                     <TextBox x:Name="intervalNumberTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="0" TextChanged="IntervalNumberTextBox_OnTextChanged"/>
                     
                 </StackPanel>
             </StackPanel>
         </Grid>
-
+        
         <Grid Grid.Row="3">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <Label Style="{StaticResource labelStyle}" Content="Start line in text file:    "  Width="160"/>
+                    <TextBox x:Name="startLineNumTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="17" />
+
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="4">
             <Button x:Name="startBtn" Click="StartBtn_OnClick">Start</Button>
         </Grid>
 
-        <Grid Grid.Row="6">
+        <Grid Grid.Row="7">
             <ProgressBar x:Name="progressBar" Minimum="0" Maximum="100" Value="0"></ProgressBar>
             <TextBlock x:Name="progressBarStatusText" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
