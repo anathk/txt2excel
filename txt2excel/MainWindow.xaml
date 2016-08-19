@@ -44,7 +44,7 @@
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource labelStyle}" Content="Text file path:    " />
                 <TextBox x:Name="txtPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=TextFilePath}"/>
-                <Button x:Name="loadTxtFileBtn" Width="90" Click="LoadTxtFileBtn_OnClick">Load Text File</Button>
+                <Button x:Name="loadTxtFileBtn" Width="90" Command="{Binding Path=LoadFileCommand}">Load Text File</Button>
             </StackPanel>
         </StackPanel>
         </Grid>
@@ -53,34 +53,41 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Excel file path:    " />
-                    <TextBox x:Name="excelPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=activePipeLine.RootPipeSection.Aggregate.Temperature, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="excelPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=ExcelFilePath}"/>
                     <Button x:Name="loadExcelBtn" Width="90" Click="LoadExcelBtn_OnClick" Visibility="Hidden">Load Excel File</Button>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
+                    <Label Style="{StaticResource labelStyle}" Content="Total Lines:         " />
+                    <TextBox Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=TotalLines}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Interval number in data:    "  Width="160"/>
-                    <TextBox x:Name="intervalNumberTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="0" TextChanged="IntervalNumberTextBox_OnTextChanged"/>
-                    
+                    <TextBox x:Name="intervalNumberTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="{Binding Path=IntervalNum}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
         
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Start line in text file:    "  Width="160"/>
-                    <TextBox x:Name="startLineNumTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="17" />
+                    <TextBox x:Name="startLineNumTextBox" Style="{StaticResource textboxStyle}" Width="50" Text="{Binding Path=StartLine}" />
 
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <Button x:Name="startBtn" Click="StartBtn_OnClick">Start</Button>
         </Grid>
 

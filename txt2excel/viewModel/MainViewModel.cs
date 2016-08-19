@@ -32,7 +32,6 @@ namespace txt2excel.ViewModel
         }
 
         private string excelFilePath;
-
         public string ExcelFilePath
         {
             set
@@ -40,10 +39,45 @@ namespace txt2excel.ViewModel
                 excelFilePath = value;
                 RaisePropertyChanged("ExcelFilePath");
             }
+            get
+            {
+                return excelFilePath;
+            }
         }
 
-        public int intervalNum = 0;
-        private int textFileLineCount = 0;
+        private int startLine = 0;
+        public int StartLine
+        {
+            set
+            {
+                startLine = value;
+                RaisePropertyChanged("StartLine");
+            }
+            get { return startLine;}
+        }
+
+        private int intervalNum = 0;
+        public int IntervalNum
+        {
+            set
+            {
+                intervalNum = value;
+                RaisePropertyChanged("IntervalNum");
+            }
+            get { return intervalNum;}
+        }
+
+        private int totalLines = 0;
+        public int TotalLines
+        {
+            set
+            {
+                totalLines = value;
+                RaisePropertyChanged("TotalLines");
+            }
+            get { return totalLines; }
+        }
+
         private int counter = 0;
 
 
@@ -71,11 +105,11 @@ namespace txt2excel.ViewModel
             openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
-                textFilePath = openFileDialog.FileName;
+                TextFilePath = openFileDialog.FileName;
 
-                excelFilePath = textFilePath.Replace("txt", "xls");
+                ExcelFilePath = textFilePath.Replace("txt", "xls");
 
-                textFileLineCount = File.ReadLines(txtFilePath).Count();
+                TotalLines = File.ReadLines(textFilePath).Count();
             }
         }
     }
