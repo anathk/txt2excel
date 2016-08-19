@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:txt2excel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Window.Resources>
         <Style x:Key="labelStyle" TargetType="{x:Type Label}">
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -43,7 +43,7 @@
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource labelStyle}" Content="Text file path:    " />
-                <TextBox x:Name="txtPathTextBox" Style="{StaticResource textboxStyle}" Width="200" />
+                <TextBox x:Name="txtPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=TextFilePath}"/>
                 <Button x:Name="loadTxtFileBtn" Width="90" Click="LoadTxtFileBtn_OnClick">Load Text File</Button>
             </StackPanel>
         </StackPanel>
