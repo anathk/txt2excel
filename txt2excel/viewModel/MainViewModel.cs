@@ -108,6 +108,20 @@ namespace txt2excel.ViewModel
             }
         }
 
+        private string currentOption;
+        public string CurrentOption
+        {
+            set
+            {
+                currentOption = value;
+                RaisePropertyChanged("CurrentOption");
+            }
+            get
+            {
+                return currentOption;
+            }
+        }
+
         public List<string> ProcessOption { get; set; }
 
         private int counter = 0;
@@ -125,8 +139,8 @@ namespace txt2excel.ViewModel
             LoadFileCommand = new RelayCommand(LoadFile, CanLoadFileExecute);
             StartCommand = new RelayCommand(StartProcessing, CanStartProcessingExcute);
             ProcessOption = new List<string>();
-            ProcessOption.Add("Type 1");
-            ProcessOption.Add("Type 2");
+            ProcessOption.Add("Read All");
+            ProcessOption.Add("Read Partial");
 
 
         }
@@ -178,32 +192,64 @@ namespace txt2excel.ViewModel
             var oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
             object misValue = System.Reflection.Missing.Value;
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < StartLine - 1; i++)
             {
                 txtFile.ReadLine();
                 counter++;
             }
 
+            #region "Text process option 1"
             while ((line = txtFile.ReadLine()) != null)
             {
-
-                List<string> tempRowData = new List<string>();
-                tempRowData.AddRange(line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
-
-                for (int col = 0; col < tempRowData.Count; col++)
+                if (line.Equals(""))
                 {
-                    oSheet.Cells[writeCounter + 16, col + 1] = tempRowData[col];
-
+                    line = txtFile.ReadLine();
+                    counter++;
                 }
-                writeCounter++;
+                List<string> tempRowData = new List<string>();
+                if (CurrentOption.Equals("Read All"))
+                {                   
+                    tempRowData.AddRange(line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+
+                    for (int col = 0; col < tempRowData.Count; col++)
+                    {
+                        oSheet.Cells[writeCounter + StartLine, col + 1] = tempRowData[col];
+                    }
+                    writeCounter++;
+                }
+                else if (CurrentOption.Equals("Read Partial"))
+                {
+                    tempRowData.AddRange(line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+                    var nextLine = txtFile.ReadLine();
+                    if (nextLine != null)
+                    {
+                        tempRowData.AddRange(nextLine.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+                        counter++;
+                    }
+                    for (int col = 0; col < tempRowData.Count; col++)
+                    {
+                        oSheet.Cells[writeCounter + StartLine, col + 1] = tempRowData[col];
+                    }
+                    writeCounter++;
+                }
 
 
                 if (intervalNum > 0)
                 {
                     for (int i = 0; i < intervalNum; i++)
                     {
-                        txtFile.ReadLine();
-                        counter++;
+                        if (CurrentOption.Equals("Read All"))
+                        {
+                            txtFile.ReadLine();
+                            counter++;
+                        }
+                        else if (CurrentOption.Equals("Read Partial"))
+                        {
+                            txtFile.ReadLine();
+                            txtFile.ReadLine();
+                            counter += 2;
+                        }
+                        
                     }
                 }
 
@@ -212,7 +258,7 @@ namespace txt2excel.ViewModel
                 (sender as BackgroundWorker).ReportProgress(counter / TotalLines * 100);
                 //progressBar.Value = counter/textFileLineCount*100;
             }
-
+#endregion
             oWB.SaveAs(excelFilePath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             oWB.Close(true, misValue, misValue);
             oXL.Quit();

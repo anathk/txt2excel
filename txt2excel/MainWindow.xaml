@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:txt2excel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+        Title="txt2excel for ZhengMa" Height="350" Width="525" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Window.Resources>
         <Style x:Key="labelStyle" TargetType="{x:Type Label}">
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -73,7 +73,7 @@
         <Grid Grid.Row="3">
             <StackPanel Orientation="Horizontal">
                 <Label Style="{StaticResource labelStyle}" Content="Option" Width="100"></Label>
-                <ComboBox ItemsSource="{Binding Path=ProcessOption}" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="120" />
+                <ComboBox ItemsSource="{Binding Path=ProcessOption}" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="120" SelectedValue="{Binding CurrentOption}"/>
             </StackPanel>
             
 
