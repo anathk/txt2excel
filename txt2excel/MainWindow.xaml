@@ -30,8 +30,10 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -42,7 +44,7 @@
             </Grid.ColumnDefinitions>-->
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Horizontal">
-                <Label Style="{StaticResource labelStyle}" Content="Text file path:    " />
+                <Label Style="{StaticResource labelStyle}" Content="Text file path:    "  Width="100"/>
                 <TextBox x:Name="txtPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=TextFilePath}"/>
                 <Button x:Name="loadTxtFileBtn" Width="90" Command="{Binding Path=LoadFileCommand}">Load Text File</Button>
             </StackPanel>
@@ -52,9 +54,9 @@
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Style="{StaticResource labelStyle}" Content="Excel file path:    " />
+                    <Label Style="{StaticResource labelStyle}" Content="Excel file path:" Width="100"/>
                     <TextBox x:Name="excelPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=ExcelFilePath}"/>
-                    <Button x:Name="loadExcelBtn" Width="90" Click="LoadExcelBtn_OnClick" Visibility="Hidden">Load Excel File</Button>
+                    <Button x:Name="loadExcelBtn" Width="90" Visibility="Hidden">Load Excel File</Button>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -62,13 +64,22 @@
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
-                    <Label Style="{StaticResource labelStyle}" Content="Total Lines:         " />
+                    <Label Style="{StaticResource labelStyle}" Content="Total Lines:" Width="100"/>
                     <TextBox Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=TotalLines}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
         <Grid Grid.Row="3">
+            <StackPanel Orientation="Horizontal">
+                <Label Style="{StaticResource labelStyle}" Content="Option" Width="100"></Label>
+                <ComboBox ItemsSource="{Binding Path=ProcessOption}" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="120" />
+            </StackPanel>
+            
+
+        </Grid>
+
+        <Grid Grid.Row="4">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Interval number in data:    "  Width="160"/>
@@ -77,7 +88,7 @@
             </StackPanel>
         </Grid>
         
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Start line in text file:    "  Width="160"/>
@@ -87,13 +98,13 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="5">
-            <Button x:Name="startBtn" Click="StartBtn_OnClick">Start</Button>
+        <Grid Grid.Row="7">
+            <Button x:Name="startBtn" Command="{Binding Path=StartCommand}">Start</Button>
         </Grid>
 
-        <Grid Grid.Row="7">
-            <ProgressBar x:Name="progressBar" Minimum="0" Maximum="100" Value="0"></ProgressBar>
-            <TextBlock x:Name="progressBarStatusText" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid Grid.Row="9">
+            <ProgressBar x:Name="progressBar" Minimum="0" Maximum="100" Value="{Binding Path=ProgressBarValue}"></ProgressBar>
+            <TextBlock x:Name="progressBarStatusText" HorizontalAlignment="Center" VerticalAlignment="Center"  Text="{Binding Path=ProgressBarText}"/>
         </Grid>
     </Grid>
 </Window>

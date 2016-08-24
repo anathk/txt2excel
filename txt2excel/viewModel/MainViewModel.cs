@@ -1,5 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Windows;
+using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
@@ -78,6 +83,33 @@ namespace txt2excel.ViewModel
             get { return totalLines; }
         }
 
+        private string progressBarText;
+        public string ProgressBarText
+        {
+            get { return progressBarText; }
+            set
+            {
+                progressBarText = value;
+                RaisePropertyChanged("ProgressBarText");
+            }
+        }
+
+        private double progressBarValue;
+        public double ProgressBarValue
+        {
+            set
+            {
+                progressBarValue = value;
+                RaisePropertyChanged("ProgressBarValue");
+            }
+            get
+            {
+                return progressBarValue;
+            }
+        }
+
+        public List<string> ProcessOption { get; set; }
+
         private int counter = 0;
 
 
@@ -91,7 +123,26 @@ namespace txt2excel.ViewModel
         public MainViewModel()
         {
             LoadFileCommand = new RelayCommand(LoadFile, CanLoadFileExecute);
-            
+            StartCommand = new RelayCommand(StartProcessing, CanStartProcessingExcute);
+            ProcessOption = new List<string>();
+            ProcessOption.Add("Type 1");
+            ProcessOption.Add("Type 2");
+
+
+        }
+
+        private bool CanStartProcessingExcute()
+        {
+            return true;
+        }
+
+        private void StartProcessing()
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += writeToExcelTask;
+            worker.ProgressChanged += worker_ProgressChanged;
+            worker.RunWorkerAsync(); ;
         }
 
         private bool CanLoadFileExecute()
@@ -111,6 +162,92 @@ namespace txt2excel.ViewModel
 
                 TotalLines = File.ReadLines(textFilePath).Count();
             }
+        }
+
+        private void writeToExcelTask(object sender, DoWorkEventArgs e)
+        {
+            StreamReader txtFile = new StreamReader(TextFilePath);
+            string line = "";
+            int writeCounter = 1;
+
+            Microsoft.Office.Interop.Excel.Application oXL = new Microsoft.Office.Interop.Excel.Application();
+            oXL.Visible = true;
+
+            //Get a new workbook.
+            var oWB = (Microsoft.Office.Interop.Excel._Workbook)(oXL.Workbooks.Add(""));
+            var oSheet = (Microsoft.Office.Interop.Excel._Worksheet)oWB.ActiveSheet;
+            object misValue = System.Reflection.Missing.Value;
+
+            for (int i = 0; i < 16; i++)
+            {
+                txtFile.ReadLine();
+                counter++;
+            }
+
+            while ((line = txtFile.ReadLine()) != null)
+            {
+
+                List<string> tempRowData = new List<string>();
+                tempRowData.AddRange(line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+
+                for (int col = 0; col < tempRowData.Count; col++)
+                {
+                    oSheet.Cells[writeCounter + 16, col + 1] = tempRowData[col];
+
+                }
+                writeCounter++;
+
+
+                if (intervalNum > 0)
+                {
+                    for (int i = 0; i < intervalNum; i++)
+                    {
+                        txtFile.ReadLine();
+                        counter++;
+                    }
+                }
+
+
+                counter++;
+                (sender as BackgroundWorker).ReportProgress(counter / TotalLines * 100);
+                //progressBar.Value = counter/textFileLineCount*100;
+            }
+
+            oWB.SaveAs(excelFilePath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            oWB.Close(true, misValue, misValue);
+            oXL.Quit();
+
+            releaseObject(oSheet);
+            releaseObject(oWB);
+            releaseObject(oXL);
+
+            MessageBox.Show("Dang Dang Dang!!!");
+        }
+
+        private void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                MessageBox.Show("Exception Occured while releasing object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
+
+        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //progressBar.Value = e.ProgressPercentage;
+            ProgressBarValue = (((Double)counter) / ((Double)TotalLines)) * 100;
+            //progressBarStatusText.Text = progressBar.Value.ToString();
+            ProgressBarText = string.Format("{0:P2}", ProgressBarValue / 100);
         }
     }
 }
