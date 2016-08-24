@@ -50,7 +50,7 @@ namespace txt2excel.ViewModel
             }
         }
 
-        private int startLine = 0;
+        private int startLine = 1;
         public int StartLine
         {
             set
@@ -114,6 +114,14 @@ namespace txt2excel.ViewModel
             set
             {
                 currentOption = value;
+                if (value.Equals("Read All"))
+                {
+                    StartLine = 17;
+                }
+                else if (value.Equals("Read Partial"))
+                {
+                    StartLine = 1;
+                }
                 RaisePropertyChanged("CurrentOption");
             }
             get
@@ -213,7 +221,7 @@ namespace txt2excel.ViewModel
 
                     for (int col = 0; col < tempRowData.Count; col++)
                     {
-                        oSheet.Cells[writeCounter + StartLine, col + 1] = tempRowData[col];
+                        oSheet.Cells[writeCounter + StartLine - 1, col + 1] = tempRowData[col];
                     }
                     writeCounter++;
                 }
@@ -228,7 +236,7 @@ namespace txt2excel.ViewModel
                     }
                     for (int col = 0; col < tempRowData.Count; col++)
                     {
-                        oSheet.Cells[writeCounter + StartLine, col + 1] = tempRowData[col];
+                        oSheet.Cells[writeCounter + StartLine - 1, col + 1] = tempRowData[col];
                     }
                     writeCounter++;
                 }
