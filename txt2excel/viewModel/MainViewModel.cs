@@ -131,6 +131,7 @@ namespace txt2excel.ViewModel
         }
 
         public List<string> ProcessOption { get; set; }
+        private Boolean runningFlag;
 
         private int counter = 0;
 
@@ -144,22 +145,25 @@ namespace txt2excel.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            runningFlag = false;
             LoadFileCommand = new RelayCommand(LoadFile, CanLoadFileExecute);
             StartCommand = new RelayCommand(StartProcessing, CanStartProcessingExcute);
             ProcessOption = new List<string>();
             ProcessOption.Add("Read All");
             ProcessOption.Add("Read Partial");
-
+            CurrentOption = "Read Partial";
 
         }
 
         private bool CanStartProcessingExcute()
         {
-            return true;
+            return !runningFlag;
         }
 
         private void StartProcessing()
         {
+            runningFlag = true;
+            StartCommand.RaiseCanExecuteChanged();
             BackgroundWorker worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.DoWork += writeToExcelTask;
@@ -174,16 +178,27 @@ namespace txt2excel.ViewModel
 
         private void LoadFile()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
+            if (runningFlag)
             {
-                TextFilePath = openFileDialog.FileName;
-
-                ExcelFilePath = textFilePath.Replace("txt", "xls");
-
-                TotalLines = File.ReadLines(textFilePath).Count();
+                MessageBox.Show("Can not load file while processing!");
             }
+            else
+            {
+                StartCommand.RaiseCanExecuteChanged();
+                ProgressBarText = "";
+                ProgressBarValue = 0.0;
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    TextFilePath = openFileDialog.FileName;
+
+                    ExcelFilePath = textFilePath.Replace("txt", "xls");
+
+                    TotalLines = File.ReadLines(textFilePath).Count();
+                }
+            }
+            
         }
 
         private void writeToExcelTask(object sender, DoWorkEventArgs e)
@@ -274,7 +289,7 @@ namespace txt2excel.ViewModel
             releaseObject(oSheet);
             releaseObject(oWB);
             releaseObject(oXL);
-
+            runningFlag = false;
             MessageBox.Show("Dang Dang Dang!!!");
         }
 
