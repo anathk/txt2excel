@@ -134,9 +134,11 @@ namespace txt2excel.ViewModel
         private Boolean runningFlag;
 
         private int counter = 0;
+        private Microsoft.Office.Interop.Excel.Application oXL = null;
 
 
         public RelayCommand LoadFileCommand { get; set; }
+        public RelayCommand CreateExcelFileCommand { get; set; }
         public RelayCommand StartCommand { get; set; }
 
 
@@ -147,12 +149,18 @@ namespace txt2excel.ViewModel
         {
             runningFlag = false;
             LoadFileCommand = new RelayCommand(LoadFile, CanLoadFileExecute);
+            CreateExcelFileCommand = new RelayCommand(CreateExcelFile, CanCreateExcelFileExecute);
             StartCommand = new RelayCommand(StartProcessing, CanStartProcessingExcute);
             ProcessOption = new List<string>();
             ProcessOption.Add("Read All");
             ProcessOption.Add("Read Partial");
             CurrentOption = "Read Partial";
 
+        }
+
+        private void CreateExcelFile()
+        {
+            oXL = createExcelFile();
         }
 
         private bool CanStartProcessingExcute()
@@ -172,6 +180,11 @@ namespace txt2excel.ViewModel
         }
 
         private bool CanLoadFileExecute()
+        {
+            return true;
+        }
+
+        private bool CanCreateExcelFileExecute()
         {
             return true;
         }
@@ -201,14 +214,21 @@ namespace txt2excel.ViewModel
             
         }
 
+        private Microsoft.Office.Interop.Excel.Application createExcelFile()
+        {
+            Microsoft.Office.Interop.Excel.Application oXL = new Microsoft.Office.Interop.Excel.Application();
+            oXL.Visible = true;
+            return oXL;
+        }
+
+
         private void writeToExcelTask(object sender, DoWorkEventArgs e)
         {
             StreamReader txtFile = new StreamReader(TextFilePath);
             string line = "";
             int writeCounter = 1;
 
-            Microsoft.Office.Interop.Excel.Application oXL = new Microsoft.Office.Interop.Excel.Application();
-            oXL.Visible = true;
+            
 
             //Get a new workbook.
             var oWB = (Microsoft.Office.Interop.Excel._Workbook)(oXL.Workbooks.Add(""));

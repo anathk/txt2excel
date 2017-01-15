@@ -56,7 +56,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Label Style="{StaticResource labelStyle}" Content="Excel file path:" Width="100"/>
                     <TextBox x:Name="excelPathTextBox" Style="{StaticResource textboxStyle}" Width="200" Text="{Binding Path=ExcelFilePath}"/>
-                    <Button x:Name="loadExcelBtn" Width="90" Visibility="Hidden">Load Excel File</Button>
+                    <Button x:Name="loadExcelBtn" Width="90" Command="{Binding Path=CreateExcelFileCommand}" Background="LawnGreen">Create Excel File</Button>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -99,7 +99,7 @@
         </Grid>
 
         <Grid Grid.Row="7">
-            <Button x:Name="startBtn" Command="{Binding Path=StartCommand}">Start</Button>
+            <Button x:Name="startBtn" Command="{Binding Path=StartCommand}" Background="LightBlue">Start</Button>
         </Grid>
 
         <Grid Grid.Row="9">
