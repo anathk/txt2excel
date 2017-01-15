@@ -206,7 +206,7 @@ namespace txt2excel.ViewModel
                 {
                     TextFilePath = openFileDialog.FileName;
 
-                    ExcelFilePath = textFilePath.Replace("txt", "xls");
+                    ExcelFilePath = textFilePath.Replace("txt", "xlsx");
 
                     TotalLines = File.ReadLines(textFilePath).Count();
                 }
@@ -302,7 +302,7 @@ namespace txt2excel.ViewModel
                 //progressBar.Value = counter/textFileLineCount*100;
             }
 #endregion
-            oWB.SaveAs(excelFilePath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            oWB.SaveAs(excelFilePath, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookDefault, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             oWB.Close(true, misValue, misValue);
             oXL.Quit();
 
